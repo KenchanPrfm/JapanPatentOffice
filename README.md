@@ -3,6 +3,9 @@
 APIの利用には、事前に登録が必要です。  
 詳細は特許庁HPの[通達](https://www.jpo.go.jp/system/laws/sesaku/data/api-provision.html)をご覧ください。  
   
+# ライブラリのID
+https://script.google.com/macros/library/d/12Xp0oql4p0uUdGKLas3u_IKuH84ENAmoyliuROKhmCsp-pYqZf9rzInM/1
+
 # 初期設定
 スクリプトプロパティに所定の情報を格納してください。  
 スクリプトプロパティの設定方法は、GASの[公式ドキュメント](https://developers.google.com/apps-script/guides/properties)を参照してください。
