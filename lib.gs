@@ -616,7 +616,7 @@ class JapanPatentOfficeBetaApi {
    * @param {string} applicationNumber - 出願番号
    * @return {} -
    */
-  getResistrationInformations (applicationNumber) {
+  getReistrationInformations (applicationNumber) {
     applicationNumber = this.FormatApplicationNumber(applicationNumber);
 
     const accessHeaders = {
