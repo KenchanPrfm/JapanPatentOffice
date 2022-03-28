@@ -1,5 +1,8 @@
 class JapanPatentOfficeBetaApi {
-  constructor (url="https://ip-data.jpo.go.jp/") {
+  constructor (url) {
+    if (url == undefined){
+      url ="https://ip-data.jpo.go.jp/"
+    }
     this.serverUrl = url;
     this.url = `${this.serverUrl}api/patent/v1/`
 
@@ -487,7 +490,7 @@ class JapanPatentOfficeBetaApi {
    * @param {string} applicationNumber - 出願番号
    * @return {} -
    */
-  getOpinionAndAmendmentDocuments (applicationNumber) {
+  getOpinionAndAmendmentDocuments (applicationNumber, saveInGoogleDrive=true) {
 
     applicationNumber = this.FormatApplicationNumber(applicationNumber);
 
@@ -509,13 +512,15 @@ class JapanPatentOfficeBetaApi {
     }
 
     // 
-    DriveApp.createFile(r.getBlob());
+    if (saveInGoogleDrive){
+      DriveApp.createFile(r.getBlob());
+      
+      return true;
+    }else{
+      var response = JSON.parse(r);
 
-    // var response = JSON.parse(r);
-
-    // return response;
-
-    return true;
+      return response;
+    }
   }
 
   /**指定された特許出願番号に対応する実体審査における発送書類の実体ファイル（拒絶理由通知書、特許査定、拒絶査定、補正の却下の決定）のZIPファイルをダウンロードする
@@ -641,3 +646,5 @@ class JapanPatentOfficeBetaApi {
     return response;
   }
 }
+
+this.api = JapanPatentOfficeBetaApi;
