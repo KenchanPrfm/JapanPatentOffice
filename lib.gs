@@ -1,42 +1,61 @@
 class JapanPatentOfficeBetaApi {
-  constructor (url) {
+  /**
+   * @param {string} accessToken - APIから返却されたAccessToken
+   * @param {datetime} accessTokenExpires - APIから返却されたAccessTokenの有効期限
+   * @param {string} refreshTokne - APIから返却されたRefreshToken
+   * @param {datetime} refreshTokenExprires - APIから返却されたRefreshTokenの有効期限
+   */
+  constructor (authEndpoint, accessToken, accessTokenExpires, refreshToken, refreshTokenExpires, url) {
+    if (authEndpoint == undefined) {
+      throw "認証エンドポイントを指定してください！";
+    }
+
     if (url == undefined){
       url ="https://ip-data.jpo.go.jp/"
     }
     this.serverUrl = url;
     this.url = `${this.serverUrl}api/patent/v1/`
+    this.authUrl = `${this.serverUrl}/${authEndpoint}`;
 
-    const ScriptProperties = PropertiesService.getScriptProperties();
-    this.properties = ScriptProperties;
-
-    if (ScriptProperties.getProperty("USER_ID")) {
-      // 
+    // 引数指定がされた場合の対応
+    if (accessToken != undefined && accessToken != "") {
+      this.accessToken = accessToken;
     }else{
-      throw "環境変数（USER_ID）にユーザIDを設定してください";
+      this.accessToken = "";
     }
 
-    if (ScriptProperties.getProperty("USER_PASSWORD")) {
-      //
+    if (accessTokenExpires != undefined && accessTokenExpires != "") {
+      this.accessTokenExpires = accessTokenExpires;
     }else{
-      throw "環境変数（USER_PASSWORD）にパスワードを設定してください"
+      this.accessTokenExpires = "";
     }
 
-    if (ScriptProperties.getProperty("AUTH_ENDPOINT")) {
-      //
+    if (refreshToken != undefined && refreshToken != "") {
+      this.refreshToken = refreshToken;
     }else{
-      throw "環境変数（AUTH_ENDPOINT）に認証用エンドポイントを指定してください"
+          this.refreshToken = "";
+    }
+
+    if (refreshTokenExpires != undefined && refreshTokenExpires != "") {
+      this.refreshTokenExpires = refreshTokenExpires;
+    }else {
+      this.refreshTokenExpires = "";
     }
   }
 
-  /**ユーザID及びパスワードで認証を行う
+  /**
+   * ユーザID及びパスワードで認証を行う
    * 
-   * @param {string} uid - 特許庁から指定されたユーザID
+   * @param {string} uid - 特許庁から指定されたユーザ名
    * @param {string} upass - 特許庁から指定されたパスワード
    * @return {boolean} - 認証の成否を示す真偽値
    */
-  auth () {
+  auth (uid, upass) {
+    this.uid = uid;
+    this.upass = upass;
+
     // 試行環境APIには1日あたりの接続上限が設定されているので、不必要な接続はしないようにする。
-    if (this.properties.getProperty("ACCESS_TOKEN") != undefined && this.properties.getProperty("ACCESS_TOKEN_EXPIRES") > new Date()){
+    if (this.accessToken != undefined && this.accessTokenExpires > new Date()){
       // ACCESS_TOKENが生きているケース
       Logger.log("既存TOKENを使用します。")
       return true
@@ -44,8 +63,8 @@ class JapanPatentOfficeBetaApi {
 
     const authInfo = {
       "grant_type" : "password",
-      "username" : this.properties.getProperty("USER_ID"),
-      "password" : this.properties.getProperty("USER_PASSWORD")
+      "username" : this.uid,
+      "password" : this.upass
     };
 
     const options = {
@@ -57,7 +76,7 @@ class JapanPatentOfficeBetaApi {
 
     var now = new Date();
 
-    var r = UrlFetchApp.fetch(`${this.serverUrl}${this.properties.getProperty("AUTH_ENDPOINT")}`, options);
+    var r = UrlFetchApp.fetch(`${this.authUrl}`, options);
 
     if (r.getResponseCode() != 200) {
       Logger.log(r);
@@ -67,31 +86,28 @@ class JapanPatentOfficeBetaApi {
 
     var response = JSON.parse(r);
 
-    this.properties.setProperty("ACCESS_TOKEN", response["access_token"]);  // 認証後1時間で無効化。 refresh_tokenを使うことで再取得可能。
-    this.properties.setProperty("REFRESH_TOKEN", response["refresh_token"]);  // 認証後8時間で無効化。 refresh_tokenを使うことで再取得可能。
-    // this.accessTokenExpires = ;
-    // this.refreshTokenExpires = response["refresh_expires_in"];
+    this.accessToken = response["access_token"];  // 認証後1時間で無効化。 refresh_tokenを使うことで再取得可能。
+    this.refreshToken = response["refresh_token"];  // 認証後8時間で無効化。 refresh_tokenを使うことで再取得可能。
+ 
+    this.accessTokenExpires = new Date(now.getTime() + response["expires_in"] * 1000);
+    this.refreshTokenExpires = new Date(now.getTime() + response["refresh_expires_in"] * 1000);
 
-    this.properties.setProperty("ACCESS_TOKEN_EXPIRES", new Date(now.getTime() + response["expires_in"] * 1000));
-    this.properties.setProperty("REFRESH_TOKEN_EXPIRES", new Date(now.getTime() + response["refresh_expires_in"] * 1000));
-    
     return true;
   }
 
   /**refresh_tokenでaccess_tokenを更新する
    * 
-   * @param {string} refreshToken - 取得したrefresh_token
    * @return {boolean} - 認証の成否を示す真偽値
    */
   tokenRefresh () {
     // 試行環境APIは1日あたりの接続上限が設定されているので、不必要な接続はしないようにする。
-    if (this.properties.getProperty("ACCESS_TOKEN") != undefined && this.properties.getProperty("ACCESS_TOKEN_EXPIRES") > new Date()) {
+    if (this.accessToken != undefined && this.accessTokenExpires > new Date()) {
       // ACCESS_TOKENが生きているケース
       return true;
-    } else if (this.properties.getProperty("REFRESH_TOKEN") == undefined) {
+    } else if (this.tokenRefresh == undefined) {
       // そもそもREFRESH_TOKENが無いケース
       return false;
-    } else if (this.properties.getProperty("REFRESH_TOKEN_EXPIRES") < new Date()) {
+    } else if (this.refreshTokenExpires < new Date()) {
       // REFRESH_TOKENが期限切れの場合
       return false;
     }
@@ -109,7 +125,7 @@ class JapanPatentOfficeBetaApi {
 
     }
     
-    var r = UrlFetchApp.fetch(`${this.serverUrl}${this.properties.getProperty("AUTH_ENDPOINT")}`, options);
+    var r = UrlFetchApp.fetch(`${this.authUrl}`, options);
 
     if (r.getResponseCode() != 200) {
       return false;
@@ -117,13 +133,13 @@ class JapanPatentOfficeBetaApi {
 
     var response = JSON.parse(r);
     
-    this.properties.setProperty("ACCESS_TOKEN", response["access_token"]);  // 認証後1時間で無効化。 refresh_tokenを使うことで再取得可能。
-    this.properties.setProperty("REFRESH_TOKEN", response["refresh_token"]);  // 認証後8時間で無効化。 refresh_tokenを使うことで再取得可能。
+    this.accessToken = response["access_token"];  // 認証後1時間で無効化。 refresh_tokenを使うことで再取得可能。
+    this.refreshToken = response["refresh_token"];  // 認証後8時間で無効化。 refresh_tokenを使うことで再取得可能。
     // this.accessTokenExpires = ;
     // this.refreshTokenExpires = response["refresh_expires_in"];
 
-    this.properties.setProperty("ACCESS_TOKEN_EXPIRES", new Date(now.getTime() + response["expires_in"] * 1000));
-    this.properties.setProperty("REFRESH_TOKEN_EXPIRES", new Date(now.getTime() + response["refresh_expires_in"] * 1000));
+    this.accessTokenExpires = new Date(now.getTime() + response["expires_in"] * 1000);
+    this.refreshTokenExpires = new Date(now.getTime() + response["refresh_expires_in"] * 1000);
 
     return true;
   }
@@ -221,7 +237,7 @@ class JapanPatentOfficeBetaApi {
     applicationNumber = this.FormatApplicationNumber(applicationNumber);
     
     const accessHeaders = {
-      "Authorization" : `Bearer ${this.properties.getProperty("ACCESS_TOKEN")}`
+      "Authorization" : `Bearer ${this.accessToken}`
     }
 
     const options = {
@@ -252,7 +268,7 @@ class JapanPatentOfficeBetaApi {
     applicationNumber = this.FormatApplicationNumber(applicationNumber);
 
     const accessHeaders = {
-      "Authorization" : `Bearer ${this.properties.getProperty("ACCESS_TOKEN")}`
+      "Authorization" : `Bearer ${this.accessToken}`
     }
 
     const options = {
@@ -283,7 +299,7 @@ class JapanPatentOfficeBetaApi {
     pplicationNumber = this.FormatApplicationNumber(applicationNumber);
 
     const accessHeaders = {
-      "Authorization" : `Bearer ${this.properties.getProperty("ACCESS_TOKEN")}`
+      "Authorization" : `Bearer ${this.accessToken}`
     }
 
     const options = {
@@ -313,7 +329,7 @@ class JapanPatentOfficeBetaApi {
     applicationNumber = this.FormatApplicationNumber(applicationNumber);
 
     const accessHeaders = {
-      "Authorization" : `Bearer ${this.properties.getProperty("ACCESS_TOKEN")}`
+      "Authorization" : `Bearer ${this.accessToken}`
     }
 
     const options = {
@@ -342,7 +358,7 @@ class JapanPatentOfficeBetaApi {
   getAttorneyName (attorneyCode) {
     
     const accessHeaders = {
-      "Authorization" : `Bearer ${this.properties.getProperty("ACCESS_TOKEN")}`
+      "Authorization" : `Bearer ${this.accessToken}`
     }
 
     const options = {
@@ -371,7 +387,7 @@ class JapanPatentOfficeBetaApi {
   getAttorneyCode (attorneyName) {
     
     const accessHeaders = {
-      "Authorization" : `Bearer ${this.properties.getProperty("ACCESS_TOKEN")}`
+      "Authorization" : `Bearer ${this.accessToken}`
     }
 
     const options = {
@@ -402,7 +418,7 @@ class JapanPatentOfficeBetaApi {
     applicationNumber = this.FormatApplicationNumber(applicationNumber);
 
     const accessHeaders = {
-      "Authorization" : `Bearer ${this.properties.getProperty("ACCESS_TOKEN")}`
+      "Authorization" : `Bearer ${this.accessToken}`
     }
     
     const options = {
@@ -433,7 +449,7 @@ class JapanPatentOfficeBetaApi {
     publicationNumber = this.FormatPublicationNumber(publicationNumber);
 
     const accessHeaders = {
-      "Authorization" : `Bearer ${this.properties.getProperty("ACCESS_TOKEN")}`
+      "Authorization" : `Bearer ${this.accessToken}`
     }
 
     const options = {
@@ -464,7 +480,7 @@ class JapanPatentOfficeBetaApi {
     registrationNumber = this.FormatRegistrationNumber(registrationNumber);
 
     const accessHeaders = {
-      "Authorization" : `Bearer ${this.properties.getProperty("ACCESS_TOKEN")}`
+      "Authorization" : `Bearer ${this.accessToken}`
     }
 
     const options = {
@@ -495,7 +511,7 @@ class JapanPatentOfficeBetaApi {
     applicationNumber = this.FormatApplicationNumber(applicationNumber);
 
     const accessHeaders = {
-      "Authorization" : `Bearer ${this.properties.getProperty("ACCESS_TOKEN")}`
+      "Authorization" : `Bearer ${this.accessToken}`
     }
 
     const options = {
@@ -533,7 +549,7 @@ class JapanPatentOfficeBetaApi {
     applicationNumber = this.FormatApplicationNumber(applicationNumber);
 
     const accessHeaders = {
-      "Authorization" : `Bearer ${this.properties.getProperty("ACCESS_TOKEN")}`
+      "Authorization" : `Bearer ${this.accessToken}`
     }
 
     const options = {
@@ -564,7 +580,7 @@ class JapanPatentOfficeBetaApi {
     applicationNumber = this.FormatApplicationNumber(applicationNumber);
 
     const accessHeaders = {
-      "Authorization" : `Bearer ${this.properties.getProperty("ACCESS_TOKEN")}`
+      "Authorization" : `Bearer ${this.accessToken}`
     }
 
     const options = {
@@ -595,7 +611,7 @@ class JapanPatentOfficeBetaApi {
     applicationNumber = this.FormatApplicationNumber(applicationNumber);
 
     const accessHeaders = {
-      "Authorization" : `Bearer ${this.properties.getProperty("ACCESS_TOKEN")}`
+      "Authorization" : `Bearer ${this.accessToken}`
     }
 
     const options = {
@@ -625,7 +641,7 @@ class JapanPatentOfficeBetaApi {
     applicationNumber = this.FormatApplicationNumber(applicationNumber);
 
     const accessHeaders = {
-      "Authorization" : `Bearer ${this.properties.getProperty("ACCESS_TOKEN")}`
+      "Authorization" : `Bearer ${this.accessToken}`
     }
 
     const options = {
