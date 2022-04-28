@@ -506,7 +506,11 @@ class JapanPatentOfficeBetaApi {
    * @param {string} applicationNumber - 出願番号
    * @return {} -
    */
-  getOpinionAndAmendmentDocuments (applicationNumber, saveInGoogleDrive=true) {
+  getOpinionAndAmendmentDocuments (applicationNumber, saveInGoogleDrive) {
+
+    if (saveInGoogleDrive == undefined) {
+      saveInGoogleDrive == true;
+    }
 
     applicationNumber = this.FormatApplicationNumber(applicationNumber);
 
@@ -533,7 +537,7 @@ class JapanPatentOfficeBetaApi {
       
       return true;
     }else{
-      var response = JSON.parse(r);
+      var response = r;
 
       return response;
     }
@@ -544,7 +548,11 @@ class JapanPatentOfficeBetaApi {
    * @param {string} applicationNumber - 出願番号
    * @return {} -
    */
-  getRefusalReasonAndDecisionDocuments (applicationNumber) {
+  getRefusalReasonAndDecisionDocuments (applicationNumber, saveInGoogleDrive) {
+
+    if (saveInGoogleDrive == undefined) {
+      saveInGoogleDrive == true;
+    }
 
     applicationNumber = this.FormatApplicationNumber(applicationNumber);
 
@@ -565,9 +573,16 @@ class JapanPatentOfficeBetaApi {
       return undefined;
     }
 
-    var response = JSON.parse(r);
+    // 
+    if (saveInGoogleDrive){
+      DriveApp.createFile(r.getBlob());
+      
+      return true;
+    }else{
+      var response = r;
 
-    return response;
+      return response;
+    }
   }
 
   /**指定された特許出願番号に対応する拒絶理由通知書のZIPファイルをダウンロードする
@@ -575,7 +590,11 @@ class JapanPatentOfficeBetaApi {
    * @param {string} applicationNumber - 出願番号
    * @return {} -
    */
-  getRefusalReasonDocuments (applicationNumber) {
+  getRefusalReasonDocuments (applicationNumber, saveInGoogleDrive) {
+    
+    if (saveInGoogleDrive == undefined) {
+      saveInGoogleDrive == true;
+    }
 
     applicationNumber = this.FormatApplicationNumber(applicationNumber);
 
@@ -596,9 +615,16 @@ class JapanPatentOfficeBetaApi {
       return undefined;
     }
 
-    var response = JSON.parse(r);
+    // 
+    if (saveInGoogleDrive){
+      DriveApp.createFile(r.getBlob());
+      
+      return true;
+    }else{
+      var response = r;
 
-    return response;
+      return response;
+    }
   }
 
   /**指定された特許出願番号に紐づく引用文献情報を取得する
