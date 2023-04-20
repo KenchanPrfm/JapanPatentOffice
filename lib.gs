@@ -145,7 +145,7 @@ class JapanPatentOfficeBetaApi {
 
     return true;
   }
-  
+
   // /**出願番号に「特願」や「-」が入っていた場合に整形する
   //  * 
   //  * @param {string} applicationNumber - 特許の出願番号（特願などの文言あり）
@@ -720,6 +720,15 @@ class JapanPatentOfficeBetaApi {
   //   return response;
   // }
   
+  class Patent {
+    constructor (test) {
+      this.test = test;
+    }
+
+    runTest () {
+      Logger.log(test);
+    }
+  }
 }
 
 class Patent extends JapanPatentOfficeBetaApi {
