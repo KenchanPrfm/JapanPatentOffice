@@ -114,7 +114,7 @@ class JapanPatentOfficeBetaApi {
 
     const authInfo = {
       "grant_type" : "refresh_token",
-      "refresh_token" : refreshToken
+      "refresh_token" : this.refreshToken
     }
 
     const options = {
@@ -132,6 +132,8 @@ class JapanPatentOfficeBetaApi {
     }
 
     var response = JSON.parse(r);
+
+    var now = new Date();
     
     this.accessToken = response["access_token"];  // 認証後1時間で無効化。 refresh_tokenを使うことで再取得可能。
     this.refreshToken = response["refresh_token"];  // 認証後8時間で無効化。 refresh_tokenを使うことで再取得可能。
@@ -210,18 +212,18 @@ class JapanPatentOfficeBetaApi {
    * @return {string} 特許番号から数字部分のみを抽出した文字列
    */
   FormatRegistrationNumber (registrationNumber) {
-    if (publicationNumber.length == 7){
+    if (registrationNumber.length == 7){
       // OKケース
-    }else if (publicationNumber.match("特許")) {
+    }else if (registrationNumber.match("特許")) {
       // ハイフン入ってたケース
-      publicationNumber = publicationNumber.replace("特許", "");
+      registrationNumber = registrationNumber.replace("特許", "");
     }else{
       // error
       throw "InputNumberError"
     }
 
-    if (publicationNumber.length == 7) {
-      return publicationNumber;
+    if (registrationNumber.length == 7) {
+      return registrationNumber;
     }else{
       throw "InputNumberError"
     }
@@ -296,7 +298,7 @@ class JapanPatentOfficeBetaApi {
    */
   getDivisionalInfomations (applicationNumber) {
     
-    pplicationNumber = this.FormatApplicationNumber(applicationNumber);
+    applicationNumber = this.FormatApplicationNumber(applicationNumber);
 
     const accessHeaders = {
       "Authorization" : `Bearer ${this.accessToken}`
@@ -663,7 +665,7 @@ class JapanPatentOfficeBetaApi {
    * @param {string} applicationNumber - 出願番号
    * @return {} -
    */
-  getReistrationInformations (applicationNumber) {
+  getRegistrationInformations (applicationNumber) {
     applicationNumber = this.FormatApplicationNumber(applicationNumber);
 
     const accessHeaders = {
