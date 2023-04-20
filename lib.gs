@@ -145,8 +145,585 @@ class JapanPatentOfficeBetaApi {
 
     return true;
   }
+  
+  // /**出願番号に「特願」や「-」が入っていた場合に整形する
+  //  * 
+  //  * @param {string} applicationNumber - 特許の出願番号（特願などの文言あり）
+  //  * @return {string} 特許の出願番号から数字部分のみを抽出した文字列
+  //  */
+  // FormatApplicationNumber (applicationNumber) {
+  //   if (applicationNumber.length == 10){
+  //     // OKケース
+  //   }else if (applicationNumber.match("-") && applicationNumber.match("特願")) {
+  //     // ハイフン入ってたケース
+  //     applicationNumber = applicationNumber.replace("-", "");
+  //     applicationNumber = applicationNumber.replace("特願", "");
+  //   }else if (applicationNumber.match("-")) {
+  //     // ハイフンだけ入ってたケース
+  //     applicationNumber = applicationNumber.replace("-", "");
+  //   }else{
+  //     // error
+  //     throw "InputNumberError"
+  //   }
 
-  /**出願番号に「特願」や「-」が入っていた場合に整形する
+  //   if (applicationNumber.length == 10) {
+  //     return applicationNumber;
+  //   }else{
+  //     throw "InputNumberError"
+  //   }
+  // }
+
+  // /**公開番号に「特開」や「-」が入っていた場合に整形する
+  //  * 
+  //  * @param {string} applicationNumber - 特許の公開番号（特開などの文言あり）
+  //  * @return {string} 特許の公開番号から数字部分のみを抽出した文字列
+  //  */
+  // FormatPublicationNumber (publicationNumber) {
+  //   if (publicationNumber.length == 10){
+  //     // OKケース
+  //   }else if (publicationNumber.match("-") && publicationNumber.match("特開")) {
+  //     // ハイフン入ってたケース
+  //     publicationNumber = publicationNumber.replace("-", "");
+  //     publicationNumber = publicationNumber.replace("特開", "");
+  //   }else if (publicationNumber.match("-") && publicationNumber.match("特公")) {
+  //     publicationNumber = publicationNumber.replace("-", "");
+  //     publicationNumber = publicationNumber.replace("特公", "");
+  //   }else if (publicationNumber.match("-") && publicationNumber.match("特表")) {
+  //     publicationNumber = publicationNumber.replace("-", "");
+  //     publicationNumber = publicationNumber.replace("特表", "");
+  //   }else if (publicationNumber.match("-")) {
+  //     // ハイフンだけ入ってたケース
+  //     publicationNumber = publicationNumber.replace("-", "");
+  //   }else{
+  //     // error
+  //     throw "InputNumberError"
+  //   }
+
+  //   if (publicationNumber.length == 10) {
+  //     return publicationNumber;
+  //   }else{
+  //     throw "InputNumberError"
+  //   }
+  // }
+
+  // /**特許番号に「特許」が入っていた場合に整形する
+  //  * 
+  //  * @param {string} applicationNumber - 特許番号（特許などの文言あり）
+  //  * @return {string} 特許番号から数字部分のみを抽出した文字列
+  //  */
+  // FormatRegistrationNumber (registrationNumber) {
+  //   if (registrationNumber.length == 7){
+  //     // OKケース
+  //   }else if (registrationNumber.match("特許")) {
+  //     // ハイフン入ってたケース
+  //     registrationNumber = registrationNumber.replace("特許", "");
+  //   }else{
+  //     // error
+  //     throw "InputNumberError"
+  //   }
+
+  //   if (registrationNumber.length == 7) {
+  //     return registrationNumber;
+  //   }else{
+  //     throw "InputNumberError"
+  //   }
+  // }
+
+  // /**指定された特許出願番号に紐づく経過情報の一覧を取得する
+  //  * 
+  //  * @param {string} applicationNumber - 検索対象特許の出願番号
+  //  * @return {} - 
+  //  */
+  // getProgress (applicationNumber) {
+
+  //   applicationNumber = this.FormatApplicationNumber(applicationNumber);
+    
+  //   const accessHeaders = {
+  //     "Authorization" : `Bearer ${this.accessToken}`
+  //   }
+
+  //   const options = {
+  //     "headers" : accessHeaders,
+  //     "muteHttpExceptions" : true
+  //   }
+
+  //   var r = UrlFetchApp.fetch(`${this.url}app_progress/${applicationNumber}`, options);
+
+  //   if (r.getResponseCode() == 401) {
+  //     throw "Token Expired ";
+  //   }else if (r.getResponseCode() != 200) {
+  //     return undefined;
+  //   }
+
+  //   var response = JSON.parse(r);
+
+  //   return response;
+  // }
+
+  // /**指定された特許出願番号に紐づく経過情報（優先権基礎情報、原出願情報、分割出願群情報を含まない）を取得する
+  //  * 
+  //  * @param {string} applicationNumber - 検索対象特許の出願番号
+  //  * @return {} - 
+  //  */
+  // getSimpleProgress (applicationNumber) {
+
+  //   applicationNumber = this.FormatApplicationNumber(applicationNumber);
+
+  //   const accessHeaders = {
+  //     "Authorization" : `Bearer ${this.accessToken}`
+  //   }
+
+  //   const options = {
+  //     "headers" : accessHeaders,
+  //     "muteHttpExceptions" : true
+  //   }
+
+  //   var r = UrlFetchApp.fetch(`${this.url}app_progress_simple/${applicationNumber}`, options);
+
+  //   if (r.getResponseCode() == 401) {
+  //     throw "Token Expired ";
+  //   }else if (r.getResponseCode() != 200) {
+  //     return undefined;
+  //   }
+
+  //   var response = JSON.parse(r);
+
+  //   return response;
+  // }
+
+  // /**指定された特許出願番号に紐づく分割出願情報を取得する。
+  //  * 
+  //  * @param {applicationNumber} - 出願番号
+  //  * @return {} -
+  //  */
+  // getDivisionalInfomations (applicationNumber) {
+    
+  //   applicationNumber = this.FormatApplicationNumber(applicationNumber);
+
+  //   const accessHeaders = {
+  //     "Authorization" : `Bearer ${this.accessToken}`
+  //   }
+
+  //   const options = {
+  //     "headers" : accessHeaders,
+  //     "muteHttpExceptions" : true
+  //   }
+
+  //   var r = UrlFetchApp.fetch(`${this.url}divisional_app_info/${applicationNumber}`, options);
+
+  //   if (r.getResponseCode() == 401) {
+  //     throw "Token Expired ";
+  //   }else if (r.getResponseCode() != 200) {
+  //     return undefined;
+  //   }
+
+  //   var response = JSON.parse(r);
+
+  //   return response;
+  // }
+
+  // /**指定された特許出願番号に紐づく優先基礎出願情報を取得する
+  //  * 
+  //  * @param {applicationNumber} - 出願番号
+  //  * @return {} -
+  //  */
+  // getPriorityInformations (applicationNumber) {
+  //   applicationNumber = this.FormatApplicationNumber(applicationNumber);
+
+  //   const accessHeaders = {
+  //     "Authorization" : `Bearer ${this.accessToken}`
+  //   }
+
+  //   const options = {
+  //     "headers" : accessHeaders,
+  //     "muteHttpExceptions" : true
+  //   }
+
+  //   var r = UrlFetchApp.fetch(`${this.url}priority_right_app_info/${applicationNumber}`, options);
+
+  //   if (r.getResponseCode() == 401) {
+  //     throw "Token Expired ";
+  //   }else if (r.getResponseCode() != 200) {
+  //     return undefined;
+  //   }
+
+  //   var response = JSON.parse(r);
+
+  //   return response;
+  // }
+
+  // /**指定された申請人コードで申請人(出願人・代理人)氏名・名称を取得する
+  //  * 
+  //  * @param {string} attorneyCode - 申請人コード
+  //  * @return {} -
+  //  */
+  // getAttorneyName (attorneyCode) {
+    
+  //   const accessHeaders = {
+  //     "Authorization" : `Bearer ${this.accessToken}`
+  //   }
+
+  //   const options = {
+  //     "headers" : accessHeaders,
+  //     "muteHttpExceptions" : true
+  //   }
+
+  //   var r = UrlFetchApp.fetch(`${this.url}applicant_attorney_cd/${attorneyCode}`, options);
+
+  //   if (r.getResponseCode() == 401) {
+  //     throw "Token Expired ";
+  //   }else if (r.getResponseCode() != 200) {
+  //     return undefined;
+  //   }
+
+  //   var response = JSON.parse(r);
+
+  //   return response;
+  // }
+
+  // /**指定された申請人氏名・名称を完全一致検索で、申請人(出願人・代理人)コードを取得する
+  //  * 
+  //  * @param {string} attorneyName - 申請人氏名・名称
+  //  * @return {} -
+  //  */
+  // getAttorneyCode (attorneyName) {
+    
+  //   const accessHeaders = {
+  //     "Authorization" : `Bearer ${this.accessToken}`
+  //   }
+
+  //   const options = {
+  //     "headers" : accessHeaders,
+  //     "muteHttpExceptions" : true
+  //   }
+
+  //   var r = UrlFetchApp.fetch(`${this.url}applicant_attorney/${attorneyName}`, options);
+
+  //   if (r.getResponseCode() == 401) {
+  //     throw "Token Expired ";
+  //   }else if (r.getResponseCode() != 200) {
+  //     return undefined;
+  //   }
+
+  //   var response = JSON.parse(r);
+
+  //   return response;
+  // }
+  
+  // /**出願番号に紐づく案件番号を取得する
+  //  * 
+  //  * @param {string} applicationNumber - 出願番号
+  //  * @return {} -
+  //  */
+  // getCaseNumberFromApplicationNumber (applicationNumber) {
+    
+  //   applicationNumber = this.FormatApplicationNumber(applicationNumber);
+
+  //   const accessHeaders = {
+  //     "Authorization" : `Bearer ${this.accessToken}`
+  //   }
+    
+  //   const options = {
+  //     "headers" : accessHeaders,
+  //     "muteHttpExceptions" : true
+  //   }
+
+  //   var r = UrlFetchApp.fetch(`${this.url}case_number_reference/application/${applicationNumber}`, options);
+
+  //   if (r.getResponseCode() == 401) {
+  //     throw "Token Expired ";
+  //   }else if (r.getResponseCode() != 200) {
+  //     return undefined;
+  //   }
+
+  //   var response = JSON.parse(r);
+
+  //   return response;
+  // }
+
+  // /**公開番号に紐づく案件番号を取得する
+  //  * 
+  //  * @param {string} publicationNumber - 公開番号
+  //  * @param {} -
+  //  */
+  // getCaseNumberFromPublicationNumber (publicationNumber) {
+    
+  //   publicationNumber = this.FormatPublicationNumber(publicationNumber);
+
+  //   const accessHeaders = {
+  //     "Authorization" : `Bearer ${this.accessToken}`
+  //   }
+
+  //   const options = {
+  //     "headers" : accessHeaders,
+  //     "muteHttpExceptions" : true
+  //   }
+
+  //   var r = UrlFetchApp.fetch(`${this.url}case_number_reference/publication/${publicationNumber}`, options);
+
+  //   if (r.getResponseCode() == 401) {
+  //     throw "Token Expired ";
+  //   }else if (r.getResponseCode() != 200) {
+  //     return undefined;
+  //   }
+
+  //   var response = JSON.parse(r);
+
+  //   return response;
+  // }
+
+  // /**登録番号に紐づく案件番号を取得する
+  //  * 
+  //  * @param {string} registrationNumber - 登録番号
+  //  * @return {} - 
+  //  */
+  // getCaseNumberFromRegistrationNumber (registrationNumber) {
+    
+  //   registrationNumber = this.FormatRegistrationNumber(registrationNumber);
+
+  //   const accessHeaders = {
+  //     "Authorization" : `Bearer ${this.accessToken}`
+  //   }
+
+  //   const options = {
+  //     "headers" : accessHeaders,
+  //     "muteHttpExceptions" : true
+  //   }
+
+  //   var r = UrlFetchApp.fetch(`${this.url}case_number_reference/registration/${registrationNumber}`, options);
+
+  //   if (r.getResponseCode() == 401) {
+  //     throw "Token Expired ";
+  //   }else if (r.getResponseCode() != 200) {
+  //     return undefined;
+  //   }
+
+  //   var response = JSON.parse(r);
+
+  //   return response;
+  // }
+
+  // /**指定された特許出願番号に対応する実体審査における特許申請書類の実体ファイル（意見書・手続補正書）のZIPファイルをダウンロードする
+  //  * 
+  //  * @param {string} applicationNumber - 出願番号
+  //  * @return {} -
+  //  */
+  // getOpinionAndAmendmentDocuments (applicationNumber, saveInGoogleDrive) {
+
+  //   if (saveInGoogleDrive == undefined) {
+  //     saveInGoogleDrive == true;
+  //   }
+
+  //   applicationNumber = this.FormatApplicationNumber(applicationNumber);
+
+  //   const accessHeaders = {
+  //     "Authorization" : `Bearer ${this.accessToken}`
+  //   }
+
+  //   const options = {
+  //     "headers" : accessHeaders,
+  //     "muteHttpExceptions" : true
+  //   }
+
+  //   var r = UrlFetchApp.fetch(`${this.url}app_doc_cont_opinion_amendment/${applicationNumber}`, options);
+
+  //   if (r.getResponseCode() == 401) {
+  //     throw "Token Expired ";
+  //   }else if (r.getResponseCode() != 200) {
+  //     return undefined;
+  //   }
+
+  //   // 
+  //   if (saveInGoogleDrive){
+  //     DriveApp.createFile(r.getBlob());
+      
+  //     return true;
+  //   }else{
+  //     var response = r;
+
+  //     return response;
+  //   }
+  // }
+
+  // /**指定された特許出願番号に対応する実体審査における発送書類の実体ファイル（拒絶理由通知書、特許査定、拒絶査定、補正の却下の決定）のZIPファイルをダウンロードする
+  //  * 
+  //  * @param {string} applicationNumber - 出願番号
+  //  * @return {} -
+  //  */
+  // getRefusalReasonAndDecisionDocuments (applicationNumber, saveInGoogleDrive) {
+
+  //   if (saveInGoogleDrive == undefined) {
+  //     saveInGoogleDrive == true;
+  //   }
+
+  //   applicationNumber = this.FormatApplicationNumber(applicationNumber);
+
+  //   const accessHeaders = {
+  //     "Authorization" : `Bearer ${this.accessToken}`
+  //   }
+
+  //   const options = {
+  //     "headers" : accessHeaders,
+  //     "muteHttpExceptions" : true
+  //   }
+
+  //   var r = UrlFetchApp.fetch(`${this.url}app_doc_cont_refusal_reason_decision/${applicationNumber}`, options);
+
+  //   if (r.getResponseCode() == 401) {
+  //     throw "Token Expired ";
+  //   }else if (r.getResponseCode() != 200) {
+  //     return undefined;
+  //   }
+
+  //   // 
+  //   if (saveInGoogleDrive){
+  //     DriveApp.createFile(r.getBlob());
+      
+  //     return true;
+  //   }else{
+  //     var response = r;
+
+  //     return response;
+  //   }
+  // }
+
+  // /**指定された特許出願番号に対応する拒絶理由通知書のZIPファイルをダウンロードする
+  //  * 
+  //  * @param {string} applicationNumber - 出願番号
+  //  * @return {} -
+  //  */
+  // getRefusalReasonDocuments (applicationNumber, saveInGoogleDrive) {
+    
+  //   if (saveInGoogleDrive == undefined) {
+  //     saveInGoogleDrive == true;
+  //   }
+
+  //   applicationNumber = this.FormatApplicationNumber(applicationNumber);
+
+  //   const accessHeaders = {
+  //     "Authorization" : `Bearer ${this.accessToken}`
+  //   }
+
+  //   const options = {
+  //     "headers" : accessHeaders,
+  //     "muteHttpExceptions" : true
+  //   }
+
+  //   var r = UrlFetchApp.fetch(`${this.url}app_doc_cont_refusal_reason/${applicationNumber}`, options);
+
+  //   if (r.getResponseCode() == 401) {
+  //     throw "Token Expired ";
+  //   }else if (r.getResponseCode() != 200) {
+  //     return undefined;
+  //   }
+
+  //   // 
+  //   if (saveInGoogleDrive){
+  //     DriveApp.createFile(r.getBlob());
+      
+  //     return true;
+  //   }else{
+  //     var response = r;
+
+  //     return response;
+  //   }
+  // }
+
+  // /**指定された特許出願番号に紐づく引用文献情報を取得する
+  //  * 
+  //  * @param {string} applicationNumber - 出願番号
+  //  * @return {} -
+  //  */
+  // getCitationInformations (applicationNumber) {
+
+  //   applicationNumber = this.FormatApplicationNumber(applicationNumber);
+
+  //   const accessHeaders = {
+  //     "Authorization" : `Bearer ${this.accessToken}`
+  //   }
+
+  //   const options = {
+  //     "headers" : accessHeaders,
+  //     "muteHttpExceptions" : true
+  //   }
+
+  //   var r = UrlFetchApp.fetch(`${this.url}cite_doc_info/${applicationNumber}`, options);
+
+  //   if (r.getResponseCode() == 401) {
+  //     throw "Token Expired ";
+  //   }else if (r.getResponseCode() != 200) {
+  //     return undefined;
+  //   }
+
+  //   var response = JSON.parse(r);
+
+  //   return response;
+  // }
+
+  // /**指定された特許出願番号に紐づく登録情報を取得する
+  //  * 
+  //  * @param {string} applicationNumber - 出願番号
+  //  * @return {} -
+  //  */
+  // getRegistrationInformations (applicationNumber) {
+  //   applicationNumber = this.FormatApplicationNumber(applicationNumber);
+
+  //   const accessHeaders = {
+  //     "Authorization" : `Bearer ${this.accessToken}`
+  //   }
+
+  //   const options = {
+  //     "headers" : accessHeaders,
+  //     "muteHttpExceptions" : true
+  //   }
+
+  //   var r = UrlFetchApp.fetch(`${this.url}registration_info/${applicationNumber}`, options);
+
+  //   if (r.getResponseCode() == 401) {
+  //     throw "Token Expired ";
+  //   }else if (r.getResponseCode() != 200) {
+  //     return undefined;
+  //   }
+
+  //   var response = JSON.parse(r);
+
+  //   return response;
+  // }
+
+  // /**指定された特許出願番号に紐づくJ-PlatPatの固定アドレスを取得する。
+  //  * 
+  //  * @param {string} applicationNumber - 出願番号
+  //  * @return {} - 
+  //  */
+  // getJppFixedAddress (applicationNumber) {
+  //   applicationNumber = this.FormatApplicationNumber(applicationNumber);
+
+  //   const accessHeaders = {
+  //     "Authorization" : `Bearer ${this.accessToken}`
+  //   }
+
+  //   const options = {
+  //     "headers" : accessHeaders,
+  //     "muteHttpExceptions" : true
+  //   }
+
+  //   let r = UrlFetchApp.fetch(`${this.url}jpp_fixed_address/${applicationNumber}`);
+
+  //   if (r.getResponseCode() == 401) {
+  //     throw "Token Expired ";
+  //   }else if (r.getResponseCode() != 200) {
+  //     return undefined;
+  //   }
+
+  //   let response = JSON.parse(r);
+
+  //   return response;
+  // }
+  
+}
+
+class Patent extends JapanPatentOfficeBetaApi {
+    /**出願番号に「特願」や「-」が入っていた場合に整形する
    * 
    * @param {string} applicationNumber - 特許の出願番号（特願などの文言あり）
    * @return {string} 特許の出願番号から数字部分のみを抽出した文字列
@@ -688,6 +1265,47 @@ class JapanPatentOfficeBetaApi {
     var response = JSON.parse(r);
 
     return response;
+  }
+
+  /**指定された特許出願番号に紐づくJ-PlatPatの固定アドレスを取得する。
+   * 
+   * @param {string} applicationNumber - 出願番号
+   * @return {} - 
+   */
+  getJppFixedAddress (applicationNumber) {
+    applicationNumber = this.FormatApplicationNumber(applicationNumber);
+
+    const accessHeaders = {
+      "Authorization" : `Bearer ${this.accessToken}`
+    }
+
+    const options = {
+      "headers" : accessHeaders,
+      "muteHttpExceptions" : true
+    }
+
+    let r = UrlFetchApp.fetch(`${this.url}jpp_fixed_address/${applicationNumber}`);
+
+    if (r.getResponseCode() == 401) {
+      throw "Token Expired ";
+    }else if (r.getResponseCode() != 200) {
+      return undefined;
+    }
+
+    let response = JSON.parse(r);
+
+    return response;
+  }
+}
+
+class Design extends JapanPatentOfficeBetaApi {
+
+}
+class TradeMark extends JapanPatentOfficeBetaApi {
+  getApplicationProgress () {
+    Logger.log ("a");
+
+    `/v1/app_progress/`
   }
 }
 
