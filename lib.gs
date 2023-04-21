@@ -14,7 +14,6 @@ class JapanPatentOfficeBetaApi {
       url ="https://ip-data.jpo.go.jp/"
     }
     this.serverUrl = url;
-    this.url = `${this.serverUrl}api/patent/v1/`
     this.authUrl = `${this.serverUrl}/${authEndpoint}`;
 
     // 引数指定がされた場合の対応
@@ -234,7 +233,20 @@ class JapanPatentOfficeBetaApi {
    * @param {string} applicationNumber - 検索対象特許の出願番号
    * @return {} - 
    */
-  getProgress (applicationNumber) {
+  getProgress (applicationNumber, type) {
+    switch (type) {
+      case "patent":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      case "trademark":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      case "design":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      default:
+        return false;
+    }
 
     applicationNumber = this.FormatApplicationNumber(applicationNumber);
     
@@ -263,9 +275,24 @@ class JapanPatentOfficeBetaApi {
   /**指定された特許出願番号に紐づく経過情報（優先権基礎情報、原出願情報、分割出願群情報を含まない）を取得する
    * 
    * @param {string} applicationNumber - 検索対象特許の出願番号
+   * @param {string} type - 特許（patent）、商標（trademark）、意匠（design）の選択
    * @return {} - 
    */
-  getSimpleProgress (applicationNumber) {
+  getSimpleProgress (applicationNumber, type) {
+
+    switch (type) {
+      case "patent":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      case "trademark":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      case "design":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      default:
+        return false;
+    }
 
     applicationNumber = this.FormatApplicationNumber(applicationNumber);
 
@@ -294,9 +321,24 @@ class JapanPatentOfficeBetaApi {
   /**指定された特許出願番号に紐づく分割出願情報を取得する。
    * 
    * @param {applicationNumber} - 出願番号
+   * @param {string} type - 特許（patent）、商標（trademark）、意匠（design）の選択
    * @return {} -
    */
-  getDivisionalInfomations (applicationNumber) {
+  getDivisionalInfomations (applicationNumber, type) {
+
+    switch (type) {
+      case "patent":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      case "trademark":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      case "design":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      default:
+        return false;
+    }
     
     applicationNumber = this.FormatApplicationNumber(applicationNumber);
 
@@ -325,9 +367,25 @@ class JapanPatentOfficeBetaApi {
   /**指定された特許出願番号に紐づく優先基礎出願情報を取得する
    * 
    * @param {applicationNumber} - 出願番号
+   * @param {string} type - 特許（patent）、商標（trademark）、意匠（design）の選択
    * @return {} -
    */
-  getPriorityInformations (applicationNumber) {
+  getPriorityInformations (applicationNumber, type) {
+
+    switch (type) {
+      case "patent":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      case "trademark":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      case "design":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      default:
+        return false;
+    }
+
     applicationNumber = this.FormatApplicationNumber(applicationNumber);
 
     const accessHeaders = {
@@ -355,9 +413,24 @@ class JapanPatentOfficeBetaApi {
   /**指定された申請人コードで申請人(出願人・代理人)氏名・名称を取得する
    * 
    * @param {string} attorneyCode - 申請人コード
+   * @param {string} type - 特許（patent）、商標（trademark）、意匠（design）の選択
    * @return {} -
    */
-  getAttorneyName (attorneyCode) {
+  getAttorneyName (attorneyCode, type) {
+
+    switch (type) {
+      case "patent":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      case "trademark":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      case "design":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      default:
+        return false;
+    }
     
     const accessHeaders = {
       "Authorization" : `Bearer ${this.accessToken}`
@@ -384,9 +457,24 @@ class JapanPatentOfficeBetaApi {
   /**指定された申請人氏名・名称を完全一致検索で、申請人(出願人・代理人)コードを取得する
    * 
    * @param {string} attorneyName - 申請人氏名・名称
+   * @param {string} type - 特許（patent）、商標（trademark）、意匠（design）の選択
    * @return {} -
    */
-  getAttorneyCode (attorneyName) {
+  getAttorneyCode (attorneyName, type) {
+
+    switch (type) {
+      case "patent":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      case "trademark":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      case "design":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      default:
+        return false;
+    }
     
     const accessHeaders = {
       "Authorization" : `Bearer ${this.accessToken}`
@@ -413,9 +501,24 @@ class JapanPatentOfficeBetaApi {
   /**出願番号に紐づく案件番号を取得する
    * 
    * @param {string} applicationNumber - 出願番号
+   * @param {string} type - 特許（patent）、商標（trademark）、意匠（design）の選択
    * @return {} -
    */
-  getCaseNumberFromApplicationNumber (applicationNumber) {
+  getCaseNumberFromApplicationNumber (applicationNumber, type) {
+
+    switch (type) {
+      case "patent":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      case "trademark":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      case "design":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      default:
+        return false;
+    }
     
     applicationNumber = this.FormatApplicationNumber(applicationNumber);
 
@@ -444,9 +547,24 @@ class JapanPatentOfficeBetaApi {
   /**公開番号に紐づく案件番号を取得する
    * 
    * @param {string} publicationNumber - 公開番号
+   * @param {string} type - 特許（patent）、商標（trademark）、意匠（design）の選択
    * @param {} -
    */
-  getCaseNumberFromPublicationNumber (publicationNumber) {
+  getCaseNumberFromPublicationNumber (publicationNumber, type) {
+
+    switch (type) {
+      case "patent":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      case "trademark":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      case "design":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      default:
+        return false;
+    }
     
     publicationNumber = this.FormatPublicationNumber(publicationNumber);
 
@@ -475,9 +593,24 @@ class JapanPatentOfficeBetaApi {
   /**登録番号に紐づく案件番号を取得する
    * 
    * @param {string} registrationNumber - 登録番号
+   * @param {string} type - 特許（patent）、商標（trademark）、意匠（design）の選択
    * @return {} - 
    */
-  getCaseNumberFromRegistrationNumber (registrationNumber) {
+  getCaseNumberFromRegistrationNumber (registrationNumber, type) {
+
+    switch (type) {
+      case "patent":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      case "trademark":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      case "design":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      default:
+        return false;
+    }
     
     registrationNumber = this.FormatRegistrationNumber(registrationNumber);
 
@@ -506,9 +639,24 @@ class JapanPatentOfficeBetaApi {
   /**指定された特許出願番号に対応する実体審査における特許申請書類の実体ファイル（意見書・手続補正書）のZIPファイルをダウンロードする
    * 
    * @param {string} applicationNumber - 出願番号
+   * @param {string} type - 特許（patent）、商標（trademark）、意匠（design）の選択
    * @return {} -
    */
-  getOpinionAndAmendmentDocuments (applicationNumber, saveInGoogleDrive) {
+  getOpinionAndAmendmentDocuments (applicationNumber, saveInGoogleDrive, type) {
+
+    switch (type) {
+      case "patent":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      case "trademark":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      case "design":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      default:
+        return false;
+    }
 
     if (saveInGoogleDrive == undefined) {
       saveInGoogleDrive == true;
@@ -548,9 +696,24 @@ class JapanPatentOfficeBetaApi {
   /**指定された特許出願番号に対応する実体審査における発送書類の実体ファイル（拒絶理由通知書、特許査定、拒絶査定、補正の却下の決定）のZIPファイルをダウンロードする
    * 
    * @param {string} applicationNumber - 出願番号
+   * @param {string} type - 特許（patent）、商標（trademark）、意匠（design）の選択
    * @return {} -
    */
-  getRefusalReasonAndDecisionDocuments (applicationNumber, saveInGoogleDrive) {
+  getRefusalReasonAndDecisionDocuments (applicationNumber, saveInGoogleDrive, type) {
+
+    switch (type) {
+      case "patent":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      case "trademark":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      case "design":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      default:
+        return false;
+    }
 
     if (saveInGoogleDrive == undefined) {
       saveInGoogleDrive == true;
@@ -590,9 +753,24 @@ class JapanPatentOfficeBetaApi {
   /**指定された特許出願番号に対応する拒絶理由通知書のZIPファイルをダウンロードする
    * 
    * @param {string} applicationNumber - 出願番号
+   * @param {string} type - 特許（patent）、商標（trademark）、意匠（design）の選択
    * @return {} -
    */
-  getRefusalReasonDocuments (applicationNumber, saveInGoogleDrive) {
+  getRefusalReasonDocuments (applicationNumber, saveInGoogleDrive, type) {
+
+    switch (type) {
+      case "patent":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      case "trademark":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      case "design":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      default:
+        return false;
+    }
     
     if (saveInGoogleDrive == undefined) {
       saveInGoogleDrive == true;
@@ -632,9 +810,24 @@ class JapanPatentOfficeBetaApi {
   /**指定された特許出願番号に紐づく引用文献情報を取得する
    * 
    * @param {string} applicationNumber - 出願番号
+   * @param {string} type - 特許（patent）、商標（trademark）、意匠（design）の選択
    * @return {} -
    */
-  getCitationInformations (applicationNumber) {
+  getCitationInformations (applicationNumber, type) {
+
+    switch (type) {
+      case "patent":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      case "trademark":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      case "design":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      default:
+        return false;
+    }
 
     applicationNumber = this.FormatApplicationNumber(applicationNumber);
 
@@ -663,9 +856,25 @@ class JapanPatentOfficeBetaApi {
   /**指定された特許出願番号に紐づく登録情報を取得する
    * 
    * @param {string} applicationNumber - 出願番号
+   * @param {string} type - 特許（patent）、商標（trademark）、意匠（design）の選択
    * @return {} -
    */
-  getRegistrationInformations (applicationNumber) {
+  getRegistrationInformations (applicationNumber, type) {
+
+    switch (type) {
+      case "patent":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      case "trademark":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      case "design":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      default:
+        return false;
+    }
+
     applicationNumber = this.FormatApplicationNumber(applicationNumber);
 
     const accessHeaders = {
@@ -693,9 +902,25 @@ class JapanPatentOfficeBetaApi {
   /**指定された特許出願番号に紐づくJ-PlatPatの固定アドレスを取得する。
    * 
    * @param {string} applicationNumber - 出願番号
+   * @param {string} type - 特許（patent）、商標（trademark）、意匠（design）の選択
    * @return {} - 
    */
-  getJppFixedAddress (applicationNumber) {
+  getJppFixedAddress (applicationNumber, type) {
+
+    switch (type) {
+      case "patent":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      case "trademark":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      case "design":
+        this.url = `${this.serverUrl}api/${type}/v1/`;
+        break;
+      default:
+        return false;
+    }
+
     applicationNumber = this.FormatApplicationNumber(applicationNumber);
 
     const accessHeaders = {
@@ -720,6 +945,35 @@ class JapanPatentOfficeBetaApi {
     return response;
   }
   
+  /**指定された種別と案件番号に紐づくPCT出願の日本国内移行後の出願番号を取得する。
+   * 
+   * @param {string} pctApplicationNumber - PCT出願番号／公開番号
+   * @return {} -
+   */
+  getPctNationalApplicationNumber (pctApplicationNumber) {
+
+    // applicationNumber = this.FormatApplicationNumber(pctApplicationNumber);
+    const accessHeaders = {
+      "Authorization" : `Bearer ${this.accessToken}`
+    }
+
+    const options = {
+      "headers" : accessHeaders,
+      "muteHttpExceptions" : true
+    }
+
+    let r = UrlFetchApp.fetch(`${this.url}pct_national_phase_application_number/international_application/${pctApplicationNumber}`);
+
+    if (r.getResponseCode() == 401) {
+      throw "Token Expired ";
+    }else if (r.getResponseCode() != 200) {
+      return undefined;
+    }
+
+    let response = JSON.parse(r);
+
+    return response;
+  }
 }
 
 this.api = JapanPatentOfficeBetaApi;
